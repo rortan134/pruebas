@@ -19,22 +19,89 @@
  * 8. Usa el patrón “async-await” con un “try-catch” para imprimir por consola el
  * error del paso anterior cuando se produzca.
  *
+ * Creación de un proyecto HTML + JavaScript.
+ * Creación de un sencillo formulario que recupere los datos de un alumno.
+ * Creación de una clase para instanciar alumnos.
+ * Creación de una función que devuelva una promesa con un objeto de alumno.
+ * Creación de una función con el patrón "async-await" que invoque la anterior para ser disparada desde el formulario.
+ * Consumo de la promesa en patrón "async-await".
+ * Consumo de error en patrón "async-await".
+ *
  * Clases ECMAScript 2015.
  * Instancias de objetos.
  * Función con retorno de promesa.
  * Función asíncrona con el patrón "async-await".
  * Uso de "resolve" en promesa.
  * Uso de "reject" en promesa.
+ *
+ * Desarrolla los pasos que habrá que seguir para definir todo el código de la manera que te planteamos en el PDF adjunto.
  */
 
-let name = document.getElementById("name").value;
-let surname = document.getElementById("surname").value;
-let points = document.getElementById("points").value;
+function validateInputs(name, surname, points) {
+    const hasValidName = !!name.trim();
+    const hasValidSurname = !!surname.trim();
+
+    // Convertir de 'string' a 'number'
+    const pointsNumber = parseInt(points);
+    const isValidPoints = pointsNumber >= 0 && pointsNumber <= 10; // asegurarse de que los puntos están entre 0 y 10 (por ejemplo '-1' no es un valor válido)
+
+    return hasValidName && hasValidSurname && isValidPoints;
+}
 
 class Alumno {
-    
+    name;
+    surname;
+    points;
+
+    constructor(name, surname, points) {
+        this.name = name;
+        this.surname = surname;
+        this.points = points;
+    }
+
+    set(newPoints) {
+        const nuevoValorDePuntosEsValido = validateInputs(this.name, this.surname, newPoints);
+        if (nuevoValorDePuntosEsValido) {
+            this.points = newPoints;
+        } else {
+            throw new Error("Nuevo valor de puntos no es válido");
+        }
+        return this;
+    }
+
+    get() {
+        if (this.points >= 5) {
+            return "Apto";
+        } else {
+            return "No apto";
+        }
+    }
+}
+
+function getUserResult(name, surname, points) {
+    return new Promise((resolve, reject) => {
+        const inputsSonValidos = validateInputs(name, surname, points);
+        if (!inputsSonValidos) {
+            reject("Datos no son válidos");
+        }
+
+        const alumnoClass = new Alumno(name, surname, points);
+        const alumnoAptitud = alumnoClass.get();
+
+        // esperar 2 segundos (2000ms)
+        setTimeout(() => resolve(`${name} ${surname}: ${alumnoAptitud}`), 2000);
+    });
 }
 
 async function showUserResult() {
-    new Alumno({})
+    const name = document.getElementById("name").value;
+    const surname = document.getElementById("surname").value;
+    const points = document.getElementById("points").value;
+
+    try {
+        const userResults = await getUserResult(name, surname, points);
+        console.log(userResults);
+    } catch (error) {
+        console.error(error);
+    }
 }
