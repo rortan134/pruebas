@@ -105,3 +105,11 @@ async function showUserResult() {
         console.error(error);
     }
 }
+
+const alumno = new Alumno("Nombre", "Apellido", 2);
+
+console.log(`${alumno.name} ${alumno.surname}:`, alumno.get());
+
+alumno.set(10);
+
+console.log(`${alumno.name} ${alumno.surname}:`, alumno.get());
