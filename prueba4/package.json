@@ -1,0 +1,14 @@
+{
+    "name": "evaluacion",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "cypress": "cypress",
+        "test": "cypress open"
+    },
+    "license": "ISC",
+    "devDependencies": {
+        "cypress": "^13.6.0"
+    }
+}
